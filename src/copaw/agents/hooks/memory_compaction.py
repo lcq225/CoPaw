@@ -4,6 +4,9 @@
 This hook monitors token usage and automatically compacts older messages
 when the context window approaches its limit, preserving recent messages
 and the system prompt.
+
+Enhanced with context recovery: automatically extracts recent conversations
+and pending tasks after compaction for better task continuity.
 """
 import logging
 from typing import TYPE_CHECKING, Any
@@ -17,6 +20,11 @@ from ..utils import (
     get_copaw_token_counter,
 )
 from ...config.config import load_agent_config
+from .context_recovery import (
+    ContextRecoveryConfig,
+    enhance_compressed_summary,
+    get_recovery_message,
+)
 
 if TYPE_CHECKING:
     from ..memory import MemoryManager
@@ -178,6 +186,43 @@ class MemoryCompactionHook:
                 messages=messages_to_compact,
                 previous_summary=memory.get_compressed_summary(),
             )
+
+            # ========== Context Recovery Enhancement ==========
+            # Enhance compressed summary with recent conversations
+            # and pending tasks for better task continuity
+            try:
+                workspace_dir = self.memory_manager.working_dir
+                session_id = getattr(agent, 'session_id', None) or kwargs.get('session_id', '')
+                
+                if session_id:
+                    recovery_config = ContextRecoveryConfig(
+                        enabled=True,
+                        recent_n=getattr(running_config, 'context_recovery_recent_n', 5),
+                        show_pending_tasks=getattr(running_config, 'context_recovery_show_pending_tasks', True),
+                    )
+                    
+                    # Enhance the compressed summary with recent context
+                    enhanced_summary = enhance_compressed_summary(
+                        workspace_dir=workspace_dir,
+                        session_id=session_id,
+                        original_summary=compact_content,
+                        config=recovery_config,
+                    )
+                    compact_content = enhanced_summary
+                    
+                    # Show recovery info to user
+                    recovery_msg = get_recovery_message(
+                        workspace_dir=workspace_dir,
+                        session_id=session_id,
+                        config=recovery_config,
+                    )
+                    if recovery_msg:
+                        await self._print_status_message(agent, recovery_msg)
+                        
+            except Exception as recovery_error:
+                # Don't fail compaction if recovery fails
+                logger.warning(f"Context recovery failed: {recovery_error}")
+            # ========== End Context Recovery Enhancement ==========
 
             await self._print_status_message(
                 agent,

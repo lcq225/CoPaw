@@ -336,6 +336,24 @@ class AgentsRunningConfig(BaseModel):
         description="Maximum length for /history command output",
     )
 
+    # Context Recovery Configuration
+    context_recovery_enabled: bool = Field(
+        default=True,
+        description="Enable context recovery after memory compaction",
+    )
+
+    context_recovery_recent_n: int = Field(
+        default=5,
+        ge=1,
+        le=10,
+        description="Number of recent QA pairs to extract for context recovery",
+    )
+
+    context_recovery_show_pending_tasks: bool = Field(
+        default=True,
+        description="Whether to show pending tasks in recovery summary",
+    )
+
     embedding_config: EmbeddingConfig = Field(
         default_factory=EmbeddingConfig,
         description="Embedding model configuration",
