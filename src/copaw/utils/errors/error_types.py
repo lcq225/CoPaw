@@ -57,21 +57,30 @@ ERROR_TYPES_DB: Dict[str, ErrorType] = {
         error_type="FileNotFoundError",
         category=ErrorCategory.FILE_ERROR,
         severity=ErrorSeverity.ERROR,
-        suggestion="Check if file path exists. Consider using os.path.exists() for pre-check.",
+        suggestion=(
+            "Check if file path exists. "
+            "Use os.path.exists() for pre-check."
+        ),
         auto_fixable=False
     ),
     "PermissionError": ErrorType(
         error_type="PermissionError",
         category=ErrorCategory.PERMISSION_ERROR,
         severity=ErrorSeverity.ERROR,
-        suggestion="Check file/directory permissions. Consider running with elevated privileges.",
+        suggestion=(
+            "Check file/directory permissions. "
+            "Consider running with elevated privileges."
+        ),
         auto_fixable=False
     ),
     "ModuleNotFoundError": ErrorType(
         error_type="ModuleNotFoundError",
         category=ErrorCategory.IMPORT_ERROR,
         severity=ErrorSeverity.ERROR,
-        suggestion="Check if module is installed. Try: pip install <module-name>",
+        suggestion=(
+            "Check if module is installed. "
+            "Try: pip install <module-name>"
+        ),
         related_skill="package_manager",
         auto_fixable=True
     ),
@@ -79,21 +88,30 @@ ERROR_TYPES_DB: Dict[str, ErrorType] = {
         error_type="sqlite3.OperationalError",
         category=ErrorCategory.DATABASE_ERROR,
         severity=ErrorSeverity.ERROR,
-        suggestion="Check if database is locked or corrupted. Consider closing other connections.",
+        suggestion=(
+            "Check if database is locked or corrupted. "
+            "Consider closing other connections."
+        ),
         auto_fixable=False
     ),
     "KeyError": ErrorType(
         error_type="KeyError",
         category=ErrorCategory.KEY_ERROR,
         severity=ErrorSeverity.WARNING,
-        suggestion="Check if dictionary/JSON key exists. Use .get() method for safe access.",
+        suggestion=(
+            "Check if dictionary/JSON key exists. "
+            "Use .get() method for safe access."
+        ),
         auto_fixable=False
     ),
     "TypeError": ErrorType(
         error_type="TypeError",
         category=ErrorCategory.TYPE_ERROR,
         severity=ErrorSeverity.ERROR,
-        suggestion="Check if data types match expected types. Add type hints for clarity.",
+        suggestion=(
+            "Check if data types match expected types. "
+            "Add type hints for clarity."
+        ),
         auto_fixable=False
     ),
     "ValueError": ErrorType(

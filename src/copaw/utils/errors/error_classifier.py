@@ -180,9 +180,9 @@ class AutoErrorCatcher:
     
     def _save_to_file(
         self,
-        exc: BaseException,
-        tb: Optional[Any] = None
-    ) -> str:
+        _exc: BaseException,
+        _tb: Optional[Any] = None
+    ) -> Optional[str]:
         """Save error to temp file"""
         try:
             fd, path = tempfile.mkstemp(

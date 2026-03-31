@@ -6,7 +6,9 @@ This module provides automatic error capture, classification, and
 improvement suggestions for CoPaw agents and skills.
 
 Example usage:
-    from copaw.utils.errors import auto_catch, AutoErrorCatcher, catch_and_learn
+    from copaw.utils.errors import (
+        auto_catch, AutoErrorCatcher, catch_and_learn
+    )
     
     # Method 1: Decorator
     @auto_catch()

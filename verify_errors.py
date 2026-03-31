@@ -5,10 +5,9 @@ Run this to verify the code works before running full pytest suite.
 """
 
 import sys
-import os
 
 # Add CoPaw src to path
-sys.path.insert(0, r'D:\github\CoPaw\src')
+sys.path.insert(0, r"D:\github\CoPaw\src")
 
 print("=" * 60)
 print("Error Categorization System - Verification")
@@ -19,13 +18,12 @@ print("\n[Test 1] Importing modules...")
 try:
     from copaw.utils.errors import (
         ErrorCategory,
-        ErrorSeverity,
-        ErrorType,
         get_error_type,
         AutoErrorCatcher,
         auto_catch,
-        catch_and_learn
+        catch_and_learn,
     )
+
     print("✅ All imports successful!")
 except Exception as e:
     print(f"❌ Import failed: {e}")
@@ -61,9 +59,12 @@ except ZeroDivisionError:
 
 # Test 4: auto_catch decorator
 print("\n[Test 4] Testing auto_catch decorator...")
+
+
 @auto_catch("decorated_function")
 def test_func():
     return int("abc")
+
 
 try:
     test_func()
@@ -98,7 +99,9 @@ categories = [
 
 for error_name in categories:
     error_type = get_error_type(error_name)
-    assert error_type.category != ErrorCategory.UNKNOWN, f"{error_name} should be categorized"
+    assert (
+        error_type.category != ErrorCategory.UNKNOWN
+    ), f"{error_name} should be categorized"
     print(f"  ✅ {error_name:25} -> {error_type.category.value}")
 
 # Test 7: Unknown error
