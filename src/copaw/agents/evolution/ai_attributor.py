@@ -16,10 +16,9 @@ Usage:
 """
 
 import logging
-from typing import Optional, Dict, Any, List
+from typing import Dict, Any, List
 from dataclasses import dataclass
 from datetime import datetime
-import json
 
 from copaw.utils.errors import ErrorRecord
 
@@ -29,7 +28,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class AttributionResult:
     """AI attribution analysis result"""
-    
+
     error_type: str
     root_cause: str
     responsibility: str  # code, data, config, environment, user
@@ -44,28 +43,28 @@ class AttributionResult:
 class AIAttributor:
     """
     AI-powered attribution analyzer.
-    
+
     Uses 5-Why method for root cause analysis.
-    
+
     Example:
         attributor = AIAttributor()
         result = attributor.analyze(error_record)
         print(result.root_cause)
     """
-    
+
     def __init__(self, use_llm: bool = False):
         """
         Initialize AI attributor.
-        
+
         Args:
             use_llm: Use LLM for analysis (default: False, uses rule-based)
         """
         self.use_llm = use_llm
         self._llm_client = None
-        
+
         # Pre-defined why chains for common errors
         self.why_chains = self._load_why_chains()
-    
+
     def _load_why_chains(self) -> Dict[str, List[str]]:
         """Load pre-defined 5-Why chains"""
         return {
@@ -74,52 +73,52 @@ class AIAttributor:
                 "Why? File was moved or deleted",
                 "Why? No validation before access",
                 "Why? Assumed file always exists",
-                "Why? No error handling strategy"
+                "Why? No error handling strategy",
             ],
             "KeyError": [
                 "Why? Key not in dictionary",
                 "Why? Data structure changed",
                 "Why? No schema validation",
                 "Why? Assumed key always exists",
-                "Why? No defensive programming"
+                "Why? No defensive programming",
             ],
             "TypeError": [
                 "Why? Wrong data type",
                 "Why? Input not validated",
                 "Why? No type hints enforced",
                 "Why? Assumed correct input",
-                "Why? No input validation layer"
+                "Why? No input validation layer",
             ],
             "ModuleNotFoundError": [
                 "Why? Module not installed",
                 "Why? Dependency missing",
                 "Why? requirements.txt incomplete",
                 "Why? No dependency check",
-                "Why? No environment validation"
+                "Why? No environment validation",
             ],
             "TimeoutError": [
                 "Why? Operation timed out",
                 "Why? Network slow or unavailable",
                 "Why? No retry mechanism",
                 "Why? Assumed fast response",
-                "Why? No timeout handling strategy"
+                "Why? No timeout handling strategy",
             ],
             "ValueError": [
                 "Why? Invalid value",
                 "Why? Input not validated",
                 "Why? No range checking",
                 "Why? Assumed valid input",
-                "Why? No validation layer"
-            ]
+                "Why? No validation layer",
+            ],
         }
-    
+
     def analyze(self, error: ErrorRecord) -> AttributionResult:
         """
         Analyze error and attribute root cause.
-        
+
         Args:
             error: ErrorRecord instance
-        
+
         Returns:
             AttributionResult instance
         """
@@ -127,33 +126,34 @@ class AIAttributor:
             return self._analyze_with_llm(error)
         else:
             return self._analyze_rule_based(error)
-    
+
     def _analyze_rule_based(self, error: ErrorRecord) -> AttributionResult:
         """Rule-based attribution analysis"""
-        
+
         # Get 5-Why chain
         why_chain = self.why_chains.get(
             error.error_type,
-            self._generate_generic_why_chain(error)
+            self._generate_generic_why_chain(error),
         )
-        
+
         # Determine root cause
         root_cause = why_chain[-1] if why_chain else "Unknown root cause"
-        
+
         # Attribute responsibility
         responsibility = self._attribute_responsibility(error)
-        
+
         # Generate suggestion
         suggestion = self._generate_suggestion(error, responsibility)
-        
+
         # Generate preventive measures
         preventive_measures = self._generate_preventive_measures(
-            error, responsibility
+            error,
+            responsibility,
         )
-        
+
         # Calculate confidence
         confidence = self._calculate_confidence(error, why_chain)
-        
+
         return AttributionResult(
             error_type=error.error_type,
             root_cause=root_cause,
@@ -163,19 +163,19 @@ class AIAttributor:
             suggestion=suggestion,
             preventive_measures=preventive_measures,
             related_docs=self._get_related_docs(error),
-            analysis_timestamp=datetime.now().isoformat()
+            analysis_timestamp=datetime.now().isoformat(),
         )
-    
+
     def _analyze_with_llm(self, error: ErrorRecord) -> AttributionResult:
         """LLM-based attribution analysis (placeholder)"""
         # TODO: Integrate with CoPaw LLM providers
         logger.warning("LLM analysis not yet implemented, using rule-based")
         return self._analyze_rule_based(error)
-    
+
     def _attribute_responsibility(self, error: ErrorRecord) -> str:
         """Attribute responsibility for the error"""
         category = error.category
-        
+
         # Mapping from category to responsibility
         responsibility_map = {
             "file_error": "environment",
@@ -191,15 +191,15 @@ class AIAttributor:
             "attribute_error": "code",
             "index_error": "code",
             "runtime_error": "code",
-            "unknown": "code"
+            "unknown": "code",
         }
-        
+
         return responsibility_map.get(category, "code")
-    
+
     def _generate_suggestion(
         self,
         error: ErrorRecord,
-        responsibility: str
+        responsibility: str,
     ) -> str:
         """Generate improvement suggestion"""
         suggestions = {
@@ -222,16 +222,16 @@ class AIAttributor:
             "user": (
                 "User error: Improve user guidance and error messages. "
                 "Add input validation and clear instructions."
-            )
+            ),
         }
-        
+
         base_suggestion = suggestions.get(responsibility, error.suggestion)
         return f"{base_suggestion} {error.suggestion}"
-    
+
     def _generate_preventive_measures(
         self,
-        error: ErrorRecord,
-        responsibility: str
+        _error: ErrorRecord,
+        responsibility: str,
     ) -> List[str]:
         """Generate preventive measures"""
         measures = {
@@ -240,40 +240,43 @@ class AIAttributor:
                 "Implement try-except blocks",
                 "Add type hints and enforce them",
                 "Write unit tests for edge cases",
-                "Add logging for debugging"
+                "Add logging for debugging",
             ],
             "data": [
                 "Implement data schema validation",
                 "Add data sanitization",
                 "Validate data before processing",
                 "Add data quality checks",
-                "Implement data versioning"
+                "Implement data versioning",
             ],
             "config": [
                 "Add config validation",
                 "Implement default values",
                 "Add config schema",
                 "Validate config on startup",
-                "Document required settings"
+                "Document required settings",
             ],
             "environment": [
                 "Add environment validation",
                 "Implement fallback mechanisms",
                 "Add retry logic",
                 "Monitor environment health",
-                "Document dependencies"
+                "Document dependencies",
             ],
             "user": [
                 "Improve error messages",
                 "Add input validation",
                 "Provide clear instructions",
                 "Add user guidance",
-                "Implement helpful error recovery"
-            ]
+                "Implement helpful error recovery",
+            ],
         }
-        
-        return measures.get(responsibility, ["Review and improve error handling"])
-    
+
+        return measures.get(
+            responsibility,
+            ["Review and improve error handling"],
+        )
+
     def _generate_generic_why_chain(self, error: ErrorRecord) -> List[str]:
         """Generate generic 5-Why chain"""
         return [
@@ -281,62 +284,67 @@ class AIAttributor:
             f"Why? {error.category} occurred",
             "Why? No preventive measure in place",
             "Why? Assumed conditions always true",
-            "Why? No defensive programming"
+            "Why? No defensive programming",
         ]
-    
+
     def _calculate_confidence(
         self,
         error: ErrorRecord,
-        why_chain: List[str]
+        _why_chain: List[str],
     ) -> float:
         """Calculate confidence score"""
         confidence = 0.5
-        
+
         # Higher confidence for known error types
         if error.error_type in self.why_chains:
             confidence += 0.3
-        
+
         # Higher confidence with more context
         if error.traceback_str and len(error.traceback_str) > 100:
             confidence += 0.1
-        
+
         # Higher confidence for categorized errors
         if error.category != "unknown":
             confidence += 0.1
-        
+
         return min(1.0, confidence)
-    
+
     def _get_related_docs(self, error: ErrorRecord) -> List[str]:
         """Get related documentation"""
         docs = {
             "FileNotFoundError": [
                 "https://docs.python.org/3/library/os.path.html",
-                "https://docs.python.org/3/library/exceptions.html#FileNotFoundError"
+                (
+                    "https://docs.python.org/3/library/"
+                    "exceptions.html#FileNotFoundError"
+                ),
             ],
             "KeyError": [
-                "https://docs.python.org/3/library/"
-                "stdtypes.html#dict.get"
+                (
+                    "https://docs.python.org/3/library/"
+                    "stdtypes.html#dict.get"
+                ),
             ],
             "TypeError": [
-                "https://docs.python.org/3/library/typing.html"
+                "https://docs.python.org/3/library/typing.html",
             ],
             "ModuleNotFoundError": [
-                "https://pip.pypa.io/en/stable/cli/pip_install/"
-            ]
+                "https://pip.pypa.io/en/stable/cli/pip_install/",
+            ],
         }
-        
+
         return docs.get(error.error_type, [])
-    
+
     def analyze_batch(
         self,
-        errors: List[ErrorRecord]
+        errors: List[ErrorRecord],
     ) -> List[AttributionResult]:
         """
         Analyze multiple errors.
-        
+
         Args:
             errors: List of ErrorRecord instances
-        
+
         Returns:
             List of AttributionResult instances
         """
@@ -345,17 +353,17 @@ class AIAttributor:
             result = self.analyze(error)
             results.append(result)
         return results
-    
+
     def generate_summary(
         self,
-        results: List[AttributionResult]
+        results: List[AttributionResult],
     ) -> Dict[str, Any]:
         """
         Generate attribution analysis summary.
-        
+
         Args:
             results: List of AttributionResult instances
-        
+
         Returns:
             Summary dictionary
         """
@@ -365,37 +373,48 @@ class AIAttributor:
             "by_error_type": {},
             "avg_confidence": 0.0,
             "top_root_causes": [],
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
-        
+
         # Count by responsibility
-        responsibility_counts = {}
+        responsibility_counts: Dict[str, int] = {}
         for result in results:
             resp = result.responsibility
-            responsibility_counts[resp] = responsibility_counts.get(resp, 0) + 1
-            
+            responsibility_counts[resp] = (
+                responsibility_counts.get(resp, 0) + 1
+            )
+
             # Count by error type
             error_type = result.error_type
-            summary["by_error_type"][error_type] = \
-                summary["by_error_type"].get(error_type, 0) + 1
-        
+            by_error_type: Dict[str, int] = summary[
+                "by_error_type"
+            ]  # type: ignore
+            by_error_type[error_type] = (
+                by_error_type.get(
+                    error_type,
+                    0,
+                )
+                + 1
+            )
+
         summary["by_responsibility"] = responsibility_counts
-        
+
         # Calculate average confidence
         if results:
-            summary["avg_confidence"] = \
-                sum(r.confidence for r in results) / len(results)
-        
+            summary["avg_confidence"] = sum(
+                r.confidence for r in results
+            ) / len(results)
+
         # Top root causes
         root_cause_counts = {}
         for result in results:
             rc = result.root_cause
             root_cause_counts[rc] = root_cause_counts.get(rc, 0) + 1
-        
+
         summary["top_root_causes"] = sorted(
             root_cause_counts.items(),
             key=lambda x: x[1],
-            reverse=True
+            reverse=True,
         )[:5]
-        
+
         return summary
