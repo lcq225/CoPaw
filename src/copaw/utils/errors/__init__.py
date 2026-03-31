@@ -9,18 +9,18 @@ Example usage:
     from copaw.utils.errors import (
         auto_catch, AutoErrorCatcher, catch_and_learn
     )
-    
+
     # Method 1: Decorator
     @auto_catch()
     def my_function():
         return 1 / 0
-    
+
     # Method 2: Context manager
     with AutoErrorCatcher("operation") as catcher:
         dangerous_task()
         if catcher.has_error:
             print(f"Suggestion: {catcher.get_suggestion()}")
-    
+
     # Method 3: Manual capture
     try:
         complex_calculation()
@@ -35,14 +35,14 @@ from .error_types import (
     ErrorSeverity,
     get_error_type,
     get_category_errors,
-    ERROR_TYPES_DB
+    ERROR_TYPES_DB,
 )
 
 from .error_classifier import (
     ErrorRecord,
     AutoErrorCatcher,
     auto_catch,
-    catch_and_learn
+    catch_and_learn,
 )
 
 __all__ = [
@@ -53,7 +53,6 @@ __all__ = [
     "get_error_type",
     "get_category_errors",
     "ERROR_TYPES_DB",
-    
     # Error catcher
     "ErrorRecord",
     "AutoErrorCatcher",
