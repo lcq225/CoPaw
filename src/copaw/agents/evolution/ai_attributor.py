@@ -204,24 +204,24 @@ class AIAttributor:
         """Generate improvement suggestion"""
         suggestions = {
             "code": (
-                f"Code fix needed: Add validation and error handling for {error.error_type}. "
-                f"Consider using try-except blocks and input validation."
+                f"Code fix: Add validation and error handling for "
+                f"{error.error_type}. Use try-except and input validation."
             ),
             "data": (
-                f"Data issue: Validate input data before processing. "
-                f"Add data schema validation and sanitization."
+                "Data issue: Validate input data before processing. "
+                "Add data schema validation and sanitization."
             ),
             "config": (
-                f"Configuration issue: Review configuration settings. "
-                f"Add config validation and default values."
+                "Config issue: Review configuration settings. "
+                "Add config validation and default values."
             ),
             "environment": (
-                f"Environment issue: Check environment setup. "
-                f"Add environment validation and fallback mechanisms."
+                "Environment issue: Check environment setup. "
+                "Add environment validation and fallback mechanisms."
             ),
             "user": (
-                f"User error: Improve user guidance and error messages. "
-                f"Add input validation and clear instructions."
+                "User error: Improve user guidance and error messages. "
+                "Add input validation and clear instructions."
             )
         }
         
@@ -314,7 +314,8 @@ class AIAttributor:
                 "https://docs.python.org/3/library/exceptions.html#FileNotFoundError"
             ],
             "KeyError": [
-                "https://docs.python.org/3/library/stdtypes.html#dict.get"
+                "https://docs.python.org/3/library/"
+                "stdtypes.html#dict.get"
             ],
             "TypeError": [
                 "https://docs.python.org/3/library/typing.html"

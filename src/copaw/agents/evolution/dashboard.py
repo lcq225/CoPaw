@@ -384,10 +384,16 @@ class EvolutionDashboard:
         # Summary
         md.append("## 📊 Summary\n")
         summary = report.get('summary', {})
-        md.append(f"- **Evolution Score:** {summary.get('evolution_score', 0):.1f}/100")
+        md.append(
+            f"- **Evolution Score:** "
+            f"{summary.get('evolution_score', 0):.1f}/100"
+        )
         md.append(f"- **Total Errors Captured:** {summary.get('total_captured', 0)}")
         md.append(f"- **Patterns Detected:** {summary.get('total_patterns', 0)}")
-        md.append(f"- **Improvements Applied:** {summary.get('total_improvements', 0)}\n")
+        md.append(
+            f"- **Improvements Applied:** "
+            f"{summary.get('total_improvements', 0)}\n"
+        )
         
         # Current Metrics
         md.append("## 📈 Current Metrics\n")
@@ -404,7 +410,12 @@ class EvolutionDashboard:
         trends = report.get('trends', {})
         for period, trend_data in trends.items():
             direction = trend_data.get('direction', 'stable')
-            emoji = {"improving": "📈", "declining": "📉", "stable": "➡️"}.get(direction, "➡️")
+            emoji_map = {
+                "improving": "📈",
+                "declining": "📉",
+                "stable": "➡️"
+            }
+            emoji = emoji_map.get(direction, "➡️")
             md.append(f"- **{period.title()}:** {emoji} {direction}")
         md.append("")
         

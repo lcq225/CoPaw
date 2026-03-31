@@ -102,7 +102,6 @@ class AutoPatternDetector:
         # Track hourly counts
         try:
             timestamp = datetime.fromisoformat(error.timestamp.replace('Z', '+00:00'))
-            hour_key = timestamp.strftime('%Y-%m-%d')
             hour = timestamp.hour
             self.hourly_counts[error.error_type][hour] += 1
         except Exception as e:
@@ -303,13 +302,14 @@ class AutoPatternDetector:
         if trend == "increasing":
             return (
                 f"Alert: {error_type} is increasing. "
-                f"Recent changes may have introduced this issue. "
-                f"Review recent commits and add regression tests."
+                f"Recent changes may have introduced this. "
+                f"Review commits and add regression tests."
             )
         elif trend == "decreasing":
             return (
                 f"Good: {error_type} is decreasing. "
-                f"Recent fixes appear effective. Continue monitoring."
+                f"Recent fixes appear effective. "
+                f"Continue monitoring."
             )
         return ""
     
@@ -323,8 +323,8 @@ class AutoPatternDetector:
         """Generate suggestion for anomalous errors"""
         return (
             f"Anomaly: {error_type} spiked to {count} occurrences "
-            f"(average: {avg:.1f}). "
-            f"Check for external factors (deployment, traffic spike, etc.)."
+            f"(avg: {avg:.1f}). "
+            f"Check external factors (deployment, traffic, etc.)."
         )
     
     def generate_suggestions(self) -> List[Dict[str, Any]]:
