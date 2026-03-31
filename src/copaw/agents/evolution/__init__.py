@@ -10,19 +10,19 @@ This module provides comprehensive self-evolution capabilities:
 
 Example:
     from copaw.agents.evolution import SelfEvolution
-    
+
     evolution = SelfEvolution()
-    
+
     # Capture errors
     with evolution.catch_errors("operation"):
         risky_code()
-    
+
     # Analyze patterns
     patterns = evolution.detect_patterns()
-    
+
     # Get AI attribution
     analysis = evolution.analyze(error_record)
-    
+
     # View dashboard
     dashboard = evolution.get_dashboard()
     dashboard.export_markdown("report.md")
@@ -40,11 +40,9 @@ __all__ = [
     # Pattern Detection
     "AutoPatternDetector",
     "PatternInfo",
-    
     # AI Attribution
     "AIAttributor",
     "AttributionResult",
-    
     # Dashboard
     "EvolutionDashboard",
     "EvolutionMetrics",
