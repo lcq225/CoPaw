@@ -37,7 +37,7 @@ ERROR_TYPE_MAP = {
     "PermissionError": ErrorCategory.PERMISSION_ERROR,
     "ModuleNotFoundError": ErrorCategory.IMPORT_ERROR,
     "ImportError": ErrorCategory.IMPORT_ERROR,
-    "sqlite3.OperationalError": ErrorCategory.DATABASE_ERROR,
+    "OperationalError": ErrorCategory.DATABASE_ERROR,
     "KeyError": ErrorCategory.KEY_ERROR,
     "TypeError": ErrorCategory.TYPE_ERROR,
     "ValueError": ErrorCategory.VALUE_ERROR,
