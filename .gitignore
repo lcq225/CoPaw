@@ -96,3 +96,4 @@ src/.hypothesis/
 
 # Kiro IDE
 .kiro/
+-e "\n# 敏感配置\n.pypirc\n.env\n.env.local\n.env.production\n*.env\ncredentials.json\nsecrets/" 
