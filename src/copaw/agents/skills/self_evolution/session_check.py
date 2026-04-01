@@ -68,7 +68,7 @@ class SessionChecker:
                 if os.path.exists(filepath):
                     try:
                         with open(filepath, "r", encoding="utf-8") as f:
-                            lines = len(f.readlines())
+                            lines = sum(1 for _ in f)
 
                         status = "pass" if lines <= max_lines else "warning"
                         message = f"{filename}: {lines} 行"
